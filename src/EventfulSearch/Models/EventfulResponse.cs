@@ -15,8 +15,21 @@ namespace EventfulSearch.Models
 		public Collection<EventfulEvent> Events { get; set; }
 	}
 
+	public class EventfulPerformer
+	{
+		public string Name { get; set; }
+	}
+
+	public class EventfulImage
+	{
+		public string Url { get; set; }
+	}
+
 	public class EventfulEvent
 	{
+		public Collection<EventfulPerformer> Performers { get; set; }
+		public EventfulImage Image { get; set; }
+
 		public string Title { get; set; }
 		public string Url { get; set; }
 

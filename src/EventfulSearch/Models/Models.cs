@@ -22,6 +22,6 @@ namespace EventfulSearch.Models
 		public string EventTitle { get; set; }
 		public string VenueName { get; set; }
 		public string ArtistsOrTeams { get; set; }
-		public DateTime EventDate { get; set; }
+		public string EventDate { get; set; }
 	}
 }

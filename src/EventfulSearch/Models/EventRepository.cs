@@ -22,9 +22,9 @@ namespace EventfulSearch.Models
 		{
 			var ret = new Event()
 			{
-				ArtistsOrTeams = arg.Title,
-				EventDate = DateTime.UtcNow,
-				EventMainImageUrl = arg.Price,
+				ArtistsOrTeams = arg.Performers?.FirstOrDefault()?.Name,
+				EventDate = arg.StartTime,
+				EventMainImageUrl = arg.Image.Url ?? string.Empty,
 				EventTitle = arg.Title,
 				VenueName = arg.VenueName
 			};
