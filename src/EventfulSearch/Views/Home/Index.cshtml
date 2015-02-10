@@ -1,4 +1,4 @@
-﻿@model EventfulSearch.Models.Search
+﻿@model EventfulSearch.Models.SearchRequest
 
 	@{
 		ViewBag.Title = "Event Calender";
@@ -47,10 +47,3 @@
 			<input type="submit" value="Save" />
 		</p>
 	}
-
-<div class="editor-label">
-	@Html.LabelFor(model => model.Events)
-</div>
-<div class="editor-field">
-	@*@Html.ListBoxFor(model => model.Events, null)*@
-</div>

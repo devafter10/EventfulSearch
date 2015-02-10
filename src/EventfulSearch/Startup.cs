@@ -7,6 +7,8 @@ using Microsoft.AspNet.Routing;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Logging.Console;
+using EventfulSearch.Models;
+using EventfulSearch.Services;
 
 namespace EventfulSearch
 {
@@ -17,6 +19,16 @@ namespace EventfulSearch
 		{
 			// Add MVC services to the services container.
 			services.AddMvc();
+
+			services.AddSingleton<IEventRepository, EventRepository>();
+
+			services.AddSingleton<SearchHelper, SearchHelper>();
+
+			services.AddTransient<IEventfulService, EventfulService>();
+
+			services.AddTransient<IGoogleGeocodeService, GoogleGeocodeService>();
+
+			services.AddTransient<IRestProxy, RestSharpProxy>();
 
 			// Uncomment the following line to add Web API servcies which makes it easier to port Web API 2 controllers.
 			// You need to add Microsoft.AspNet.Mvc.WebApiCompatShim package to project.json

@@ -3,37 +3,25 @@ using System.Collections.ObjectModel;
 
 namespace EventfulSearch.Models
 {
-	public class Search
+	public class SearchRequest
 	{
 		public string Address { get; set; }
-
 		public DateTime StartDate { get; set; }
-
 		public DateTime EndDate { get; set; }
-
 		public float Radius { get; set; }
+		public string Category { get; set; }
 
-		public int Category { get; set; }
-
-		public Collection<Event> Events { get; set; }
-
-		public Search()
+		public SearchRequest()
 		{
-			Address = "123 fake";
-			StartDate = DateTime.UtcNow;
-			EndDate = DateTime.UtcNow - TimeSpan.FromDays(1);
-			Radius = 9.9f;
-			Category = 2;
-
-			Events = new Collection<Event>();
-			Events.Add(new Event() {});
-			Events.Add(new Event() { });
-			Events.Add(new Event() { });
-			
 		}
 	}
 
 	public class Event
 	{
+		public string EventMainImageUrl { get; set; }
+		public string EventTitle { get; set; }
+		public string VenueName { get; set; }
+		public string ArtistsOrTeams { get; set; }
+		public DateTime EventDate { get; set; }
 	}
 }

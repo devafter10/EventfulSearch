@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using EventfulSearch.Models;
+using System.Collections.Generic;
 
 namespace EventfulSearch.Services
 {
@@ -9,8 +10,8 @@ namespace EventfulSearch.Services
 	*/
 	public interface IEventfulService
 	{
-		Task<Collection<Event>> GetEvents();
-
-		Task<long> GetEventCount();
-	}
+		Task<List<EventfulEvent>> GetEventsAsync(SearchRequest search);
+		List<EventfulEvent> GetEvents(SearchRequest search);
+		int GetEventCount(SearchRequest search);
+    }
 }
