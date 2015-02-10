@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace EventfulSearch.Models
@@ -14,6 +15,13 @@ namespace EventfulSearch.Models
 		public SearchRequest()
 		{
 		}
+	}
+
+	public class SearchResponse
+	{
+		public int TotalNumberOfEvents { get; set; }
+		public string Duration { get; set; }
+		public List<Event> Events { get; set; }
 	}
 
 	public class Event

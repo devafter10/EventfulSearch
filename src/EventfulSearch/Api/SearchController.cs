@@ -27,16 +27,26 @@ namespace EventfulSearch.Api
 			var search = _searchHelper.Validate(address, startDate, endDate, radius, category);
             if (search == null)
 			{
-				return new ObjectResult(new Event() { EventTitle = "Invalid search request" });
+				// search request is not right. client-side validation disabled?
+				return new HttpStatusCodeResult(400);
             }
 
 			var allEvents = await _eventRepository.GetAllEventsAsync(search);
+
+			// no events found
 			if (!allEvents.Any())
 			{
-				allEvents.Add(new Event() { EventTitle = "No match found" });
+				return HttpNotFound();
 			}
 
-			return new ObjectResult(allEvents);
+			var resp = new SearchResponse()
+			{
+				Events = allEvents,
+				TotalNumberOfEvents = allEvents.Count,
+				Duration = "0"
+			};
+
+			return new ObjectResult(resp);
 		}
 	}
 }
