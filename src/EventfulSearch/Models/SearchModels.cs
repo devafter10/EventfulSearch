@@ -1,19 +1,40 @@
-﻿using System;
+﻿using Microsoft.AspNet.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace EventfulSearch.Models
 {
 	public class SearchRequest
 	{
+		[Required]
 		public string Address { get; set; }
+
+		[Display(Name = "Start Date")]
+		[DataType(DataType.Date)]
+		[DisplayFormat(DataFormatString = "dd/mm/yyyy", ApplyFormatInEditMode = true)]
+		[Required]
 		public DateTime StartDate { get; set; }
+
+		[Display(Name = "End Date")]
+		[DataType(DataType.Date)]
+		[DisplayFormat(DataFormatString = "dd/mm/yyyy", ApplyFormatInEditMode = true)]
+		[Required]
 		public DateTime EndDate { get; set; }
+
+		[Display(Name = "Radius (km)")]
+		[Range(0, 300)]
 		public float Radius { get; set; }
+
 		public string Category { get; set; }
 
 		public SearchRequest()
 		{
+			Address = string.Empty;
+			StartDate = DateTime.Today;
+			EndDate = DateTime.Today + TimeSpan.FromDays(1);
+			Radius = 1f;
+			Category = "Music";
 		}
 	}
 
@@ -30,6 +51,6 @@ namespace EventfulSearch.Models
 		public string EventTitle { get; set; }
 		public string VenueName { get; set; }
 		public string ArtistsOrTeams { get; set; }
-		public string EventDate { get; set; }
+		public DateTime EventDate { get; set; }
 	}
 }

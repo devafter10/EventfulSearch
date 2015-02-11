@@ -4,6 +4,7 @@ using EventfulSearch.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Globalization;
 
 namespace EventfulSearch.Models
 {
@@ -17,13 +18,19 @@ namespace EventfulSearch.Models
 			_eventfulSvc = eventfulSvc;
 			_geocodeSvc = geocodeSvc;
 		}
-
+		
 		private Event ConvertEvent(EventfulEvent arg)
 		{
+			DateTime dt = DateTime.MinValue;
+			if (!DateTime.TryParseExact(arg.StartTime, _eventfulSvc.EventfulDateTimeResponseFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out dt))
+			{
+				dt = DateTime.MinValue;
+			}
+
 			var ret = new Event()
 			{
-				ArtistsOrTeams = arg.Performers?.FirstOrDefault()?.Name,
-				EventDate = arg.StartTime,
+				ArtistsOrTeams = arg.Performers?.FirstOrDefault()?.Name ?? string.Empty,
+				EventDate = dt,
 				EventMainImageUrl = arg.Image.Url ?? string.Empty,
 				EventTitle = arg.Title,
 				VenueName = arg.VenueName
@@ -32,17 +39,10 @@ namespace EventfulSearch.Models
 			return ret;
 		}
 
-		public List<Event> GetAllEvents(SearchRequest searchParam)
-		{
-			var allEventfulEvents = _eventfulSvc.GetEvents(searchParam);
-
-			var allEvents = allEventfulEvents.Select(ConvertEvent);
-			return allEvents.ToList();
-		}
-
 		public async Task<List<Event>> GetAllEventsAsync(SearchRequest searchParam)
 		{
-			var allEventfulEvents = _eventfulSvc.GetEventsAsync(searchParam);
+			var geoCodeModel = new GeocodeModel(_geocodeSvc.GetGeocode(searchParam.Address));
+			var allEventfulEvents = _eventfulSvc.GetEventsAsync(searchParam, geoCodeModel);
 
 			var allEvents = (await allEventfulEvents).Select(ConvertEvent);
 			return allEvents.ToList();

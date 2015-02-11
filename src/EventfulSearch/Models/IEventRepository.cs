@@ -8,8 +8,6 @@ namespace EventfulSearch.Models
 {
 	public interface IEventRepository
 	{
-		List<Event> GetAllEvents(SearchRequest searchParam);
-
 		Task<List<Event>> GetAllEventsAsync(SearchRequest searchParam);
 	}
 }

@@ -1,25 +1,27 @@
 ﻿@model EventfulSearch.Models.SearchRequest
 
-	@{
-		ViewBag.Title = "Event Calender";
-	}
+@{
+	ViewBag.Title = "Event Calender";
+}
 
-	@using (Html.BeginForm())
-	{
-		@Html.ValidationSummary(true)
+@using (Html.BeginForm())
+{
+	@Html.ValidationSummary(true)
 
-		<div class="editor-label">
-			@Html.LabelFor(model => model.Address)
-		</div>
-		<div class="editor-field">
-			@Html.EditorFor(model => model.Address)
-		</div>
+	<div class="editor-label">
+		@Html.LabelFor(model => model.Address)
+	</div>
+	<div class="editor-field">
+		@Html.EditorFor(model => model.Address)
+		@Html.ValidationMessageFor(model => model.Address)
+	</div>
 
 		<div class="editor-label">
 			@Html.LabelFor(model => model.StartDate)
 		</div>
 		<div class="editor-field">
 			@Html.EditorFor(model => model.StartDate)
+			@Html.ValidationMessageFor(model => model.StartDate)
 		</div>
 
 		<div class="editor-label">
@@ -27,6 +29,7 @@
 		</div>
 		<div class="editor-field">
 			@Html.EditorFor(model => model.EndDate)
+			@Html.ValidationMessageFor(model => model.EndDate)
 		</div>
 
 		<div class="editor-label">
@@ -34,16 +37,15 @@
 		</div>
 		<div class="editor-field">
 			@Html.EditorFor(model => model.Radius)
+			@Html.ValidationMessageFor(model => model.Radius)
 		</div>
 
 		<div class="editor-label">
 			@Html.LabelFor(model => model.Category)
 		</div>
 		<div class="editor-field">
-			@Html.EditorFor(model => model.Category)
+			@Html.ValidationMessageFor(model => model.Category)
 		</div>
 
-		<p>
-			<input type="submit" value="Save" />
-		</p>
-	}
+		<input type="submit" value="Search" class="btn btn-default" />
+}

@@ -5,6 +5,7 @@ using EventfulSearch.Models;
 using RestSharp;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 
 namespace EventfulSearch.Services
 {
@@ -13,7 +14,13 @@ namespace EventfulSearch.Services
 		private readonly IRestProxy _proxy;
 
 		private const int LARGE_NUMBER = 100;
-		public string EVENTFUL_RESPONSE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+		public string EventfulDateTimeResponseFormat
+		{
+			get
+			{
+				return "yyyy-MM-dd HH:mm:ss";
+			}
+		}
 
 		public EventfulService(IRestProxy proxy)
 		{
@@ -23,10 +30,20 @@ namespace EventfulSearch.Services
 			_proxy.ApiKey = new KeyValuePair<string, string>("app_key", "XqcX3pSvZbQMH8cj");
         }
 
-		private RestRequest Create(SearchRequest search, int pageNumber)
+		private RestRequest Create(SearchRequest search, GeocodeModel geoCode, int pageNumber)
 		{
 			var request = new RestRequest(Method.GET);
-			request.AddParameter("location", search.Address);
+
+			string location = string.Empty;
+			if (string.IsNullOrEmpty(geoCode?.Geocode))
+			{
+				location = geoCode.Geocode;
+            } else
+			{
+				location = search.Address;
+			}
+
+			request.AddParameter("location", location);
 			request.AddParameter("date", string.Format("{0}-{1}", search.StartDate.ToEventfulDateString(), search.EndDate.ToEventfulDateString()));
 			request.AddParameter("category", search.Category);
 			request.AddParameter("within", search.Radius);
@@ -34,14 +51,14 @@ namespace EventfulSearch.Services
 			request.AddParameter("include", "price");
 			request.AddParameter("page_number", pageNumber);
 			request.AddParameter("page_size", LARGE_NUMBER);
-			request.DateFormat = EVENTFUL_RESPONSE_FORMAT;
+			// request.DateFormat = EVENTFUL_RESPONSE_FORMAT;
 		
 			return request;
 		}
 
-		public int GetEventCount(SearchRequest search)
+		public int GetEventCount(SearchRequest search, GeocodeModel geoCode)
 		{
-			var request = Create(search, 1);
+			var request = Create(search, geoCode, 1);
 			request.AddParameter("count_only", true);
 
 			// execute the request
@@ -50,34 +67,44 @@ namespace EventfulSearch.Services
 			return data.TotalItems;
 		}
 
-		public List<EventfulEvent> GetEvents(SearchRequest search)
+		public List<EventfulEvent> GetEvents(SearchRequest search, GeocodeModel geoCode)
 		{
-			var task = GetEventsAsync(search);
+			var task = GetEventsAsync(search, geoCode);
 
 			// block until Result is available. ConfigureAsync(false) in used in lower levels so shouldn't deadlock
 			return task.Result;
 		}
 
-		public async Task<List<EventfulEvent>> GetEventsAsync(SearchRequest search)
+		public async Task<List<EventfulEvent>> GetEventsAsync(SearchRequest search, GeocodeModel geoCode)
 		{
-			var totalEvent = GetEventCount(search);
-			var numOfCallsNeeded = (int) Math.Ceiling((double) totalEvent / LARGE_NUMBER);
+			EventfulResponse[] collectionOfResponse = null;
+			int totalEvent = 0;
 
-			var tasks = new List<Task<EventfulResponse>>(numOfCallsNeeded);
-			for (int i = 1; i <= numOfCallsNeeded; i++)
+            try
 			{
-				var request = Create(search, i);
-				tasks.Add(_proxy.ExecuteAsync<EventfulResponse>(request));
-			}
+				totalEvent = GetEventCount(search, geoCode);
+				var numOfCallsNeeded = (int)Math.Ceiling((double)totalEvent / LARGE_NUMBER);
 
-			var collectionOfResponse = await Task.WhenAll(tasks).ConfigureAwait(false);
+				var tasks = new List<Task<EventfulResponse>>(numOfCallsNeeded);
+				for (int i = 1; i <= numOfCallsNeeded; i++)
+				{
+					var request = Create(search, geoCode, i);
+					tasks.Add(_proxy.ExecuteAsync<EventfulResponse>(request));
+				}
+
+				collectionOfResponse = await Task.WhenAll(tasks).ConfigureAwait(false);
+			}
+			catch (Exception e)
+			{
+				throw new ApplicationException("Error interfacing with Eventful", e);
+			}
 
 			var ret = new List<EventfulEvent>(totalEvent);
 			foreach (var resp in collectionOfResponse)
 			{
 				ret.AddRange(resp.Events);
 			}
-			
+
             return ret;
 		}
 	}

@@ -21,15 +21,14 @@ namespace EventfulSearch.Api
 			_searchHelper = helper;
 		}
 
+		// string address, string startDate, string endDate, float radius, string category
 		[HttpGet]
-		public async Task<IActionResult> GetAllEvents(string address, string startDate, string endDate, float radius, string category)
+		public async Task<IActionResult> GetAllEvents([Bind("Address", "StartDate", "EndDate", "Radius", "Category")] SearchRequest search)
 		{
-			var search = _searchHelper.Validate(address, startDate, endDate, radius, category);
-            if (search == null)
+			if (!ModelState.IsValid)
 			{
-				// search request is not right. client-side validation disabled?
 				return new HttpStatusCodeResult(400);
-            }
+			}
 
 			var allEvents = await _eventRepository.GetAllEventsAsync(search);
 

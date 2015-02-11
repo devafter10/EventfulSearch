@@ -28,6 +28,11 @@ namespace EventfulSearch.Services
 
 		public GeocodeResponse GetGeocode(string address)
 		{
+			if (string.IsNullOrEmpty(address))
+			{
+				return null;
+			}
+
 			var data = _proxy.Execute<GeocodeResponse>(Create(address));
 			return data;
 		}

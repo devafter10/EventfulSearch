@@ -1,5 +1,7 @@
-﻿using System;
+﻿using RestSharp.Deserializers;
+using System;
 using System.Collections.ObjectModel;
+using System.Xml.Serialization;
 
 namespace EventfulSearch.Models
 {
