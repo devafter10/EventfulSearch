@@ -30,20 +30,11 @@ namespace EventfulSearch.Services
 			_proxy.ApiKey = new KeyValuePair<string, string>("app_key", "XqcX3pSvZbQMH8cj");
         }
 
-		private RestRequest Create(SearchRequest search, GeocodeModel geoCode, int pageNumber)
+		private RestRequest Create(SearchRequest search, int pageNumber)
 		{
 			var request = new RestRequest(Method.GET);
 
-			string location = string.Empty;
-			if (string.IsNullOrEmpty(geoCode?.Geocode))
-			{
-				location = geoCode.Geocode;
-            } else
-			{
-				location = search.Address;
-			}
-
-			request.AddParameter("location", location);
+			request.AddParameter("location", string.IsNullOrEmpty(search.Geocode) ? search.Geocode : search.Address);
 			request.AddParameter("date", string.Format("{0}-{1}", search.StartDate.ToEventfulDateString(), search.EndDate.ToEventfulDateString()));
 			request.AddParameter("category", search.Category);
 			request.AddParameter("within", search.Radius);
@@ -56,9 +47,9 @@ namespace EventfulSearch.Services
 			return request;
 		}
 
-		public int GetEventCount(SearchRequest search, GeocodeModel geoCode)
+		public int GetEventCount(SearchRequest search)
 		{
-			var request = Create(search, geoCode, 1);
+			var request = Create(search, 1);
 			request.AddParameter("count_only", true);
 
 			// execute the request
@@ -67,28 +58,28 @@ namespace EventfulSearch.Services
 			return data.TotalItems;
 		}
 
-		public List<EventfulEvent> GetEvents(SearchRequest search, GeocodeModel geoCode)
+		public List<EventfulEvent> GetEvents(SearchRequest search)
 		{
-			var task = GetEventsAsync(search, geoCode);
+			var task = GetEventsAsync(search);
 
 			// block until Result is available. ConfigureAsync(false) in used in lower levels so shouldn't deadlock
 			return task.Result;
 		}
 
-		public async Task<List<EventfulEvent>> GetEventsAsync(SearchRequest search, GeocodeModel geoCode)
+		public async Task<List<EventfulEvent>> GetEventsAsync(SearchRequest search)
 		{
 			EventfulResponse[] collectionOfResponse = null;
 			int totalEvent = 0;
 
             try
 			{
-				totalEvent = GetEventCount(search, geoCode);
+				totalEvent = GetEventCount(search);
 				var numOfCallsNeeded = (int)Math.Ceiling((double)totalEvent / LARGE_NUMBER);
 
 				var tasks = new List<Task<EventfulResponse>>(numOfCallsNeeded);
 				for (int i = 1; i <= numOfCallsNeeded; i++)
 				{
-					var request = Create(search, geoCode, i);
+					var request = Create(search, i);
 					tasks.Add(_proxy.ExecuteAsync<EventfulResponse>(request));
 				}
 

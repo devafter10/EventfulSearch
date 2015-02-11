@@ -41,8 +41,7 @@ namespace EventfulSearch.Models
 
 		public async Task<List<Event>> GetAllEventsAsync(SearchRequest searchParam)
 		{
-			var geoCodeModel = new GeocodeModel(_geocodeSvc.GetGeocode(searchParam.Address));
-			var allEventfulEvents = _eventfulSvc.GetEventsAsync(searchParam, geoCodeModel);
+			var allEventfulEvents = _eventfulSvc.GetEventsAsync(searchParam);
 
 			var allEvents = (await allEventfulEvents).Select(ConvertEvent);
 			return allEvents.ToList();

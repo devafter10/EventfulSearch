@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventfulSearch.Services;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -6,55 +7,36 @@ namespace EventfulSearch.Models
 {
 	public class SearchHelper
 	{
-		private static readonly HashSet<string> validCategories = new HashSet<string>(new[] { "Music", "Sports", "Performing Arts" }, StringComparer.OrdinalIgnoreCase);
+        private static readonly HashSet<string> ValidCategories = new HashSet<string>(new[] { "Music", "Sports", "Performing Arts" }, StringComparer.OrdinalIgnoreCase);
+		private readonly IGoogleGeocodeService _geocodeSvc;
 
-        public bool Validate(SearchRequest search)
+		public SearchHelper(IGoogleGeocodeService geocodeSvc)
+		{
+			_geocodeSvc = geocodeSvc;
+        }
+
+		public string CreateGeocode(GeocodeResponse geo)
+		{
+            if (geo == null || !string.Equals(geo.Status, "OK", StringComparison.OrdinalIgnoreCase) 
+				|| string.IsNullOrEmpty(geo.Latitude) 
+				|| string.IsNullOrEmpty(geo.Longitude))
+			{
+				return string.Empty;
+			}
+
+			var ret = string.Format("{0},{1}", geo.Latitude, geo.Longitude);
+			return ret;
+		}
+
+		public bool IsValid(SearchRequest search)
 		{
 			if (search == null) return false;
-			if (!validCategories.Contains(search.Category)) return false;
-			if (string.IsNullOrEmpty(search.Address)) return false;
-			if (search.Radius < 0 || search.Radius > 300) return false;
-			if (search.StartDate == DateTime.MinValue) return false;
-			if (search.EndDate == DateTime.MinValue) return false;
+			if (!string.IsNullOrEmpty(search.Category) && !ValidCategories.Contains(search.Category)) return false;
 
+			search.Geocode = CreateGeocode(_geocodeSvc.GetGeocode(search.Address));
+			if (string.IsNullOrEmpty(search.Geocode)) return false;
+			
 			return true;
 		}
-
-		public SearchRequest Validate(string address, string startDate, string endDate, float radius, string category)
-		{
-			var ret = new SearchRequest()
-			{
-				Address = address,
-				Radius = radius,
-				Category = category
-			};
-
-			DateTime dt = DateTime.MinValue;
-
-			ret.StartDate = DateTime.MinValue;
-			if (DateTime.TryParseExact(startDate, "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-            {
-				ret.StartDate = dt;
-			}
-
-			ret.EndDate = DateTime.MinValue;
-			if (DateTime.TryParseExact(endDate, "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-			{
-				ret.EndDate = dt;
-			}
-
-			ret = new SearchRequest()
-			{
-				Address = "49.249660,-123.119340",
-				Category = "Music",
-				StartDate = new DateTime(2015, 1, 1),
-				EndDate = new DateTime(2015, 1, 1),
-				Radius = 11f
-			};
-
-			return Validate(ret) ? ret : null;
-		}
-
-	
 	}
 }

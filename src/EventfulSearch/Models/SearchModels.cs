@@ -8,6 +8,7 @@ namespace EventfulSearch.Models
 	public class SearchRequest
 	{
 		[Required]
+		[MinLength(1)]
 		public string Address { get; set; }
 
 		[Display(Name = "Start Date")]
@@ -24,9 +25,11 @@ namespace EventfulSearch.Models
 
 		[Display(Name = "Radius (km)")]
 		[Range(0, 300)]
-		public float Radius { get; set; }
+		public float? Radius { get; set; }
 
 		public string Category { get; set; }
+
+		public string Geocode { get; set; }
 
 		public SearchRequest()
 		{

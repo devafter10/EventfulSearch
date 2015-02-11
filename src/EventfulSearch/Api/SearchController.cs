@@ -21,16 +21,25 @@ namespace EventfulSearch.Api
 			_searchHelper = helper;
 		}
 
-		// string address, string startDate, string endDate, float radius, string category
 		[HttpGet]
 		public async Task<IActionResult> GetAllEvents([Bind("Address", "StartDate", "EndDate", "Radius", "Category")] SearchRequest search)
 		{
-			if (!ModelState.IsValid)
+			if (!ModelState.IsValid || !_searchHelper.IsValid(search))
 			{
 				return new HttpStatusCodeResult(400);
 			}
 
-			var allEvents = await _eventRepository.GetAllEventsAsync(search);
+			List<Event> allEvents = null;
+			try
+			{
+				allEvents = await _eventRepository.GetAllEventsAsync(search);
+			}
+			catch (Exception e)
+			{
+				//detail logging here
+				// give generic error
+				return new HttpStatusCodeResult(500);
+			}
 
 			// no events found
 			if (!allEvents.Any())

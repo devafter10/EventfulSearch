@@ -4,6 +4,7 @@
 	ViewBag.Title = "Event Calender";
 }
 
+
 @using (Html.BeginForm())
 {
 	@Html.ValidationSummary(true)
@@ -12,15 +13,15 @@
 		@Html.LabelFor(model => model.Address)
 	</div>
 	<div class="editor-field">
-		@Html.EditorFor(model => model.Address)
+		@Html.TextBoxFor(model => model.Address)
 		@Html.ValidationMessageFor(model => model.Address)
 	</div>
 
-		<div class="editor-label">
-			@Html.LabelFor(model => model.StartDate)
-		</div>
+	<div class="editor-label">
+		@Html.LabelFor(model => model.StartDate)
+	</div>
 		<div class="editor-field">
-			@Html.EditorFor(model => model.StartDate)
+			@Html.TextBoxFor(model => model.StartDate, "{0:MM/dd/yyyy}", new { @id = "datepicker" })
 			@Html.ValidationMessageFor(model => model.StartDate)
 		</div>
 
@@ -28,7 +29,7 @@
 			@Html.LabelFor(model => model.EndDate)
 		</div>
 		<div class="editor-field">
-			@Html.EditorFor(model => model.EndDate)
+			@Html.TextBoxFor(model => model.EndDate, "{0:MM/dd/yyyy}", new { @id = "datepicker" })
 			@Html.ValidationMessageFor(model => model.EndDate)
 		</div>
 
@@ -36,7 +37,7 @@
 			@Html.LabelFor(model => model.Radius)
 		</div>
 		<div class="editor-field">
-			@Html.EditorFor(model => model.Radius)
+			@Html.TextBoxFor(model => model.Radius)
 			@Html.ValidationMessageFor(model => model.Radius)
 		</div>
 
@@ -47,5 +48,10 @@
 			@Html.ValidationMessageFor(model => model.Category)
 		</div>
 
-		<input type="submit" value="Search" class="btn btn-default" />
+		<input type="submit" value="Search" class="btn btn-default"  />
+
+		<div>
+			event 1 
+			event 2
+		</div>
 }

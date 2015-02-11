@@ -10,9 +10,9 @@ namespace EventfulSearch.Services
 	*/
 	public interface IEventfulService
 	{
-		Task<List<EventfulEvent>> GetEventsAsync(SearchRequest search, GeocodeModel geoCode);
-		List<EventfulEvent> GetEvents(SearchRequest search, GeocodeModel geoCode);
-		int GetEventCount(SearchRequest search, GeocodeModel geoCode);
+		Task<List<EventfulEvent>> GetEventsAsync(SearchRequest search);
+		List<EventfulEvent> GetEvents(SearchRequest search);
+		int GetEventCount(SearchRequest search);
 
 		string EventfulDateTimeResponseFormat { get; }
     }

@@ -27,9 +27,8 @@ namespace Tests
                 Longitude = "-123.119340",
 				Status = "OK"
 			};
-			var geoCodeModel = new GeocodeModel(geoCode);
-
-			var events = svc.GetEvents(search, geoCodeModel);
+			
+			var events = svc.GetEvents(search);
 
 			Console.WriteLine(string.Format("Event Count: {0}", events.Count));
 			Assert.True(events.Any());

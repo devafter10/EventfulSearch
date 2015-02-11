@@ -3,27 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
+using EventfulSearch.Models;
 
 namespace EventfulSearch.Controllers
 {
     public class HomeController : Controller
     {
-		public SelectList ValidCategoryItems { get; set; }
+		private readonly SearchHelper _helper;
 
-		public HomeController()
+		public IEnumerable<SelectListItem> ValidCategoryItems { get; set; }
+
+		public HomeController(SearchHelper helper)
 		{
+			_helper = helper;
+
 			ValidCategoryItems = new SelectList(new[]
 				{
-					new SelectListItem() { Text = "Music", Selected = true },
-					new SelectListItem() { Text = "Sports"},
-					new SelectListItem() { Text = "Performing Arts"}
+					new SelectListItem { Value = "Music", Text = "Music" },
+					new SelectListItem { Value = "Sports", Text = "Sports" },
+					new SelectListItem { Value = "Performing Arts", Text = "Performing Arts" }
 				});
 		}
 
 		public IActionResult Index()
         {
 			ViewBag.ValidCategoryItems = ValidCategoryItems;
-            return View();
+            return View(new SearchRequest());
         }
 
         public IActionResult Error()
