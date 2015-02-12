@@ -1,0 +1,66 @@
+﻿@model EventfulSearch.Models.SearchRequest
+
+@{
+	ViewBag.Title = "Event Calender";
+}
+
+@using (Html.BeginForm("RequestSearch", "Search", FormMethod.Post))
+{
+	@Html.ValidationSummary(true)
+	<div class="row">
+		<div class="col-md-6">
+			<div class=" editor-label">
+				@Html.LabelFor(model => model.Address)
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(model => model.Address)
+				@Html.ValidationMessageFor(model => model.Address)
+			</div>
+
+			<div class="editor-label">
+				@Html.LabelFor(model => model.Radius)
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(model => model.Radius)
+				@Html.ValidationMessageFor(model => model.Radius)
+			</div>
+
+		</div>
+
+		<div class="col-md-6">
+			<div class="editor-label">
+				@Html.LabelFor(model => model.StartDate)
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(model => model.StartDate, "{0:MM/dd/yyyy}", new { @id = "datepicker" })
+				@Html.ValidationMessageFor(model => model.StartDate)
+			</div>
+
+			<div class="editor-label">
+				@Html.LabelFor(model => model.EndDate)
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(model => model.EndDate, "{0:MM/dd/yyyy}", new { @id = "datepicker" })
+				@Html.ValidationMessageFor(model => model.EndDate)
+			</div>
+
+			<div class="editor-label">
+				@Html.LabelFor(model => model.Category)
+			</div>
+			<div class="editor-field">
+				@Html.ValidationMessageFor(model => model.Category)
+			</div>
+
+			<div class="pull-right">
+				<input type="submit" value="Search" class="btn btn-default" />
+			</div>
+		</div>
+	</div>
+}
+
+@Html.PartialAsync("_Events")
+
+@section Scripts {
+	<script src="@Url.Content("~/lib/jquery-validation/jquery.validate.js")"></script>
+	<script src="@Url.Content("~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js")"></script>
+}

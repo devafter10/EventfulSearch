@@ -1,0 +1,18 @@
+﻿@model EventfulSearch.Models.SearchResponse
+
+@Html.LabelFor(m => m.TotalNumberOfEvents, "Total Number of Events: ");
+
+@foreach (var e in Model.Events)
+{
+	<div>
+		<h4>@e.EventTitle</h4>
+		@e.ArtistsOrTeams
+		@e.EventDate
+		<a href="@e.EventMainImageUrl"></a>
+		@e.VenueName
+		<hr />
+	</div>
+}
+
+
+
