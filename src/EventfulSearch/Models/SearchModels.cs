@@ -46,6 +46,11 @@ namespace EventfulSearch.Models
 		public int TotalNumberOfEvents { get; set; }
 		public string Duration { get; set; }
 		public List<Event> Events { get; set; }
+
+		public SearchResponse()
+		{
+			Events = new List<Event>(0);
+		}
 	}
 
 	public class Event

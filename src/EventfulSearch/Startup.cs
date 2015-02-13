@@ -47,7 +47,6 @@ namespace EventfulSearch
 			// Add the following to the request pipeline only in development environment.
 			if (string.Equals(env.EnvironmentName, "Development", StringComparison.OrdinalIgnoreCase))
 			{
-				app.UseBrowserLink();
 				app.UseErrorPage(ErrorPageOptions.ShowAll);
 			}
 			else
@@ -66,7 +65,7 @@ namespace EventfulSearch
 				routes.MapRoute(
 					name: "default",
 					template: "{controller}/{action}/{id?}",
-					defaults: new { controller = "Search", action = "Index" });
+					defaults: new { controller = "Home", action = "Index" });
 
 				// Uncomment the following line to add a route for porting Web API 2 controllers.
 				// routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");

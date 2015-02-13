@@ -1,15 +1,15 @@
 ﻿@model EventfulSearch.Models.SearchResponse
 
-@Html.LabelFor(m => m.TotalNumberOfEvents, "Total Number of Events: ");
+@Html.LabelFor(m => m.TotalNumberOfEvents)
 
 @foreach (var e in Model.Events)
 {
 	<div>
 		<h4>@e.EventTitle</h4>
-		@e.ArtistsOrTeams
-		@e.EventDate
+		<p>@e.ArtistsOrTeams</p>
+		<p>@e.EventDate</p>
 		<a href="@e.EventMainImageUrl"></a>
-		@e.VenueName
+		<p>@e.VenueName</p>
 		<hr />
 	</div>
 }

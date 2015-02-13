@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace EventfulSearch.Controllers
 {
+	[Route("api/[controller]")]
 	public class SearchController : Controller
 	{
 		private readonly SearchHelper _searchHelper;
@@ -20,20 +21,8 @@ namespace EventfulSearch.Controllers
 			_searchHelper = helper;
 		}
 
-		[HttpGet]
-		public IActionResult Index()
-		{
-			return View(new SearchRequest());
-		}
-
-		[HttpPost]
-		public IActionResult RequestSearch([Bind("Address", "StartDate", "EndDate", "Radius", "Category")] SearchRequest searchReq)
-		{
-			return null;
-		}
-
         [HttpGet]
-		public async Task<IActionResult> GetAllEvents([Bind("Address", "StartDate", "EndDate", "Radius", "Category")] SearchRequest searchReq)
+		public async Task<IActionResult> GetEvents([Bind("Address", "StartDate", "EndDate", "Radius", "Category")] SearchRequest searchReq)
 		{
 			if (!ModelState.IsValid || !_searchHelper.IsValid(searchReq))
 			{

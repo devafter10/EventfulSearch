@@ -1,0 +1,63 @@
+﻿@model EventfulSearch.Models.SearchRequest
+
+@{
+	ViewBag.Title = "Event Calender";
+	
+}
+
+<form method="get" action="/api/search" data-rc-ajax="true" data-rc-target="#events">
+	@Html.ValidationSummary(true)
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				@Html.LabelFor(model => model.Address)
+				@Html.TextBoxFor(model => model.Address, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.Address)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(model => model.Radius)
+				@Html.TextBoxFor(model => model.Radius, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.Radius)
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="form-group">
+				@Html.LabelFor(model => model.StartDate)
+				@Html.TextBoxFor(model => model.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control", type = "date" })
+				@Html.ValidationMessageFor(model => model.StartDate)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(model => model.EndDate)
+				@Html.TextBoxFor(model => model.EndDate, "{0:MM/dd/yyyy}", new { @class = "form-control", type = "date" })
+				@Html.ValidationMessageFor(model => model.EndDate)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(model => model.Category)
+				<select class="form-control" id="category" name="category">
+					<option value="Music" selected>Music</option>
+					<option value="Sports">Sports</option>
+					<option value="Performing Arts">Performing Arts</option>
+				</select>
+				@Html.ValidationMessageFor(model => model.Category)
+			</div>
+
+			<div class="form-group">
+				<input type="submit" id="search" value="Search" class="btn btn-default" />
+			</div>
+		</div>
+	</div>
+</form>
+
+<div id="events" class="row col-md-12">
+	@Html.Partial("_Events", ViewData["Events"])
+</div>
+
+@section Scripts {
+	<script src="@Url.Content("~/lib/async_load.js")"></script>
+	<script src="@Url.Content("~/lib/jquery-validation/jquery.validate.js")"></script>
+	<script src="@Url.Content("~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js")"></script>
+}
