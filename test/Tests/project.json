@@ -2,7 +2,8 @@
 	"version": "1.0.0-*",
 	"dependencies": {
 		"EventfulSearch": "1.0.0-*",
-		"Xunit.KRunner": "1.0.0-beta1"
+		"Xunit.KRunner": "1.0.0-beta1",
+"Moq": "4.2.1502.911"
 	},
 
 	"commands": {

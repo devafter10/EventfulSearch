@@ -21,7 +21,20 @@ namespace EventfulSearch.Controllers
 			_searchHelper = helper;
 		}
 
-        [HttpGet]
+
+		public IActionResult IsAddressValid(string address)
+		{
+			if (!ModelState.IsValid)
+			{
+				return new HttpStatusCodeResult(400);
+			}
+
+			var ret = _searchHelper.IsAddressValid(address);
+			return new ObjectResult(ret);
+		}
+
+
+		[HttpGet]
 		public async Task<IActionResult> GetEvents([Bind("Address", "StartDate", "EndDate", "Radius", "Category")] SearchRequest searchReq)
 		{
 			if (!ModelState.IsValid || !_searchHelper.IsValid(searchReq))

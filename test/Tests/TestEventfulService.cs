@@ -9,7 +9,7 @@ namespace Tests
 {
     public class TestEventfulService
     {
-		[Fact]
+		[Fact()]
 	    public void TestService()
 		{
 			var svc = new EventfulService(new RestSharpProxy());
@@ -21,21 +21,11 @@ namespace Tests
 				EndDate = new DateTime(2015, 1, 1),
 				Radius = 1f
 			};
-			var geoCode = new GeocodeResponse()
-			{
-				Latitude = "49.249660",
-                Longitude = "-123.119340",
-				Status = "OK"
-			};
 			
-			var events = svc.GetEvents(search);
-
-			Console.WriteLine(string.Format("Event Count: {0}", events.Count));
-			Assert.True(events.Any());
-			Assert.Equal(16, events.Count);
+			var events = svc.GetEventsAsync(search);
 		}
 
-		[Fact]
+		[Fact()]
 		public void TestRespTimeFormat()
 		{
 			var svc = new EventfulService(new RestSharpProxy());

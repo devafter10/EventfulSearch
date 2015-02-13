@@ -7,6 +7,7 @@ namespace EventfulSearch.Models
 {
 	public class SearchHelper
 	{
+		private const string OK = "OK";
         private static readonly HashSet<string> ValidCategories = new HashSet<string>(new[] { "Music", "Sports", "Performing Arts" }, StringComparer.OrdinalIgnoreCase);
 		private readonly IGoogleGeocodeService _geocodeSvc;
 
@@ -17,7 +18,7 @@ namespace EventfulSearch.Models
 
 		public string CreateGeocode(GeocodeResponse geo)
 		{
-            if (geo == null || !string.Equals(geo.Status, "OK", StringComparison.OrdinalIgnoreCase) 
+            if (geo == null || !string.Equals(geo.Status, OK, StringComparison.OrdinalIgnoreCase) 
 				|| string.IsNullOrEmpty(geo.Latitude) 
 				|| string.IsNullOrEmpty(geo.Longitude))
 			{
@@ -28,14 +29,23 @@ namespace EventfulSearch.Models
 			return ret;
 		}
 
+		public Tuple<bool, string> IsAddressValid(string address)
+		{
+			var geocode = CreateGeocode(_geocodeSvc.GetGeocode(address));
+			var validGeocode = !string.IsNullOrEmpty(geocode);
+
+			return new Tuple<bool, string>(validGeocode, geocode);
+		}
+
 		public bool IsValid(SearchRequest search)
 		{
 			if (search == null) return false;
 			if (!string.IsNullOrEmpty(search.Category) && !ValidCategories.Contains(search.Category)) return false;
 
-			search.Geocode = CreateGeocode(_geocodeSvc.GetGeocode(search.Address));
-			if (string.IsNullOrEmpty(search.Geocode)) return false;
-			
+			var tuple = IsAddressValid(search.Address);
+			if (!tuple.Item1) return false;
+
+			search.Geocode = tuple.Item2;
 			return true;
 		}
 	}

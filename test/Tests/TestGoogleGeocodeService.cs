@@ -11,7 +11,7 @@ namespace Tests
 		    
 	    }
 
-	    [Fact]
+	    [Fact()]
 	    public void TestService()
 	    {
 		    var svc = new GoogleGeocodeService(new RestSharpProxy());

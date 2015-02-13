@@ -19,6 +19,12 @@ namespace EventfulSearch.Models
 			_geocodeSvc = geocodeSvc;
 		}
 		
+		/// <summary>
+		/// This is needed as there's a bug in RestSharp on parsing DateTime. RestSharp would not
+		/// convert to DateTime even though I specify exactly the same DateTimeFormat
+		/// </summary>
+		/// <param name="arg"></param>
+		/// <returns></returns>
 		private Event ConvertEvent(EventfulEvent arg)
 		{
 			DateTime dt = DateTime.MinValue;

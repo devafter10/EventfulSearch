@@ -6,7 +6,7 @@ namespace Tests
 {
     public class TestExtensionMethods
     {
-		[Fact]
+		[Fact()]
 		public void TestEventfulDateString() {
 			var d = new DateTime(2016, 8, 12, 2, 3, 4, 5);
 			var str = d.ToEventfulDateString();
